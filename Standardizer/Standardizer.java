@@ -2,7 +2,11 @@ package Standardizer;
 
 import Parser.Node;
 import Parser.NodeType;
+import Parser.Parser;
+import lexer.LexicalAnalyser;
+import lexer.Token;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Standardizer {
@@ -10,6 +14,7 @@ public class Standardizer {
 
     public Standardizer (Node root){
         this.root=root;
+        standardize(root);
     }
 
     public void standardize(Node n){
@@ -44,13 +49,13 @@ public class Standardizer {
                 break;
             //fcn_form
             case "fcn_form":
-                List<Node> variables = null;
+                List<Node> variables = new ArrayList<>();
                 for(int i=1;i<n.children.size()-1;i++){
                     variables.add(n.children.get(i));
                 }
                 Node Pf = n.children.get(0);
                 Node Ef = n.children.get(n.children.size()-1);
-                n.children.clear();
+                n.children = new ArrayList<>();
                 n.children.add(Pf);
                 Node curr = n;
                 for(Node x : variables){
@@ -86,12 +91,12 @@ public class Standardizer {
             //multiparameter functions
             case "lambda":
                 if(n.children.size()>2){
-                    List<Node> parameters = null;
+                    List<Node> parameters = new ArrayList<>();
                     for(int i=0;i<n.children.size();i++){
                         parameters.add(n.children.get(i));
                     }
                     Node expression = n.children.get(n.children.size()-1);
-                    n.children.clear();
+                    n.children = new ArrayList<>();
                     Node cur = n;
                     for(int i=0;i<parameters.size();i++){
                         Node x = parameters.get(i);
@@ -114,7 +119,7 @@ public class Standardizer {
                 Node e1 = n.children.get(0).children.get(1);
                 Node x2 = n.children.get(1).children.get(0);
                 Node e2 = n.children.get(1).children.get(1);
-                n.children.clear();
+                n.children = new ArrayList<>();
                 n.children.add(x2);
                 n.children.add(new Node(NodeType.gamma,"gamma"));
                 n.children.get(1).children.add(new Node(NodeType.lambda,"lambda"));
@@ -130,7 +135,7 @@ public class Standardizer {
                 Node E1 = n.children.get(0);
                 Node N = n.children.get(1);
                 Node E2 = n.children.get(2);
-                n.children.clear();
+                n.children = new ArrayList<>();
                 n.children.add(new Node(NodeType.gamma,"gamma"));
                 n.children.add(E2);
                 n.children.get(0).children.add(N);
@@ -148,7 +153,7 @@ public class Standardizer {
                     comma.children.add(variable);
                     tau.children.add(ex);
                 }
-                n.children.clear();
+                n.children = new ArrayList<>();
                 n.children.add(comma);
                 n.children.add(tau);
                 n.type = NodeType.equal;
@@ -159,7 +164,8 @@ public class Standardizer {
             case "rec":
                 Node X_rec = n.children.get(0).children.get(0);
                 Node E_rec = n.children.get(0).children.get(1);
-                n.children.clear();
+                System.out.println(n.children.getClass());
+                n.children = new ArrayList<>();
                 n.children.add(X_rec);
                 n.children.add(new Node(NodeType.gamma,"gamma"));
                 n.children.get(1).children.add(new Node(NodeType.y_star,"y_star"));
@@ -169,6 +175,22 @@ public class Standardizer {
                 n.type = NodeType.equal;
                 n.value = "=";
                 break;
+        }
+    }
+    public static void main(String[] args) {
+        LexicalAnalyser lex = new LexicalAnalyser("t1.txt");
+        List<Token> passingtokens = lex.getTokens();
+        Parser parser = new Parser(passingtokens);
+        Node root = parser.parse();
+        Standardizer stand = new Standardizer(root);
+        display(root, "");
+    }
+
+    public static void display(Node x, String prefix) {
+        System.out.println(prefix + x.value);
+        for (Node y : x.children) {
+            String newprefix = prefix + ".";
+            display(y, newprefix);
         }
     }
 }
