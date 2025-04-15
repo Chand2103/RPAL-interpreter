@@ -34,4 +34,6 @@ public enum NodeType {
     comma,
     empty_params,
 
+    y_star
+
 }
