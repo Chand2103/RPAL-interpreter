@@ -16,7 +16,11 @@ public class LexicalAnalyser {
             int lineCount=0;
             while ((line = reader.readLine()) != null) {
                 lineCount++;
-                tokens.addAll(tokenize(line));
+                try {
+                    tokens.addAll(tokenize(line));
+                } catch (RuntimeException e) {
+                    throw new RuntimeException(e.getMessage() + " in file line: " + lineCount, e);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
