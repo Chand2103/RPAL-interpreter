@@ -273,6 +273,34 @@ public class Parser {
         return Db();
     }
 
+//    private Node Db() {
+//        if (peek().getValue().equals("(")) {
+//            consume();
+//            Node inner = D();
+//            expect(")");
+//            return inner;
+//        } else if (peek().getType() == TokenType.IDENTIFIER) {
+//            Token id = consume();
+//            if (peek().getType() == TokenType.IDENTIFIER || peek().getValue().equals("(")) {
+//                Node idNode = new Node(NodeType.identifier, id.getValue());
+//                List<Node> params = new ArrayList<>();
+//                while (peek().getType() == TokenType.IDENTIFIER || peek().getValue().equals("(")) {
+//                    params.add(Vb());
+//                }
+//                expect("=");
+//                Node body = E();
+//                params.add(0, idNode);
+//                params.add(body);
+//                return new Node(NodeType.fcn_form, "fcn_form", params);
+//            } else if (peek().getValue().equals("=")) {
+//                consume();
+//                Node expr = E();
+//                return new Node(NodeType.equal, "=", new Node(NodeType.identifier, id.getValue()), expr);
+//            }
+//        }
+//        throw new RuntimeException("Invalid Db");
+//    }
+
     private Node Db() {
         if (peek().getValue().equals("(")) {
             consume();
@@ -284,13 +312,16 @@ public class Parser {
             if (peek().getType() == TokenType.IDENTIFIER || peek().getValue().equals("(")) {
                 Node idNode = new Node(NodeType.identifier, id.getValue());
                 List<Node> params = new ArrayList<>();
+                params.add(idNode); // Add identifier first
+
+                // Collect all parameters
                 while (peek().getType() == TokenType.IDENTIFIER || peek().getValue().equals("(")) {
                     params.add(Vb());
                 }
                 expect("=");
                 Node body = E();
-                params.add(0, idNode);
-                params.add(body);
+                params.add(body); // Add body at the end
+
                 return new Node(NodeType.fcn_form, "fcn_form", params);
             } else if (peek().getValue().equals("=")) {
                 consume();
@@ -300,6 +331,23 @@ public class Parser {
         }
         throw new RuntimeException("Invalid Db");
     }
+
+//    private Node Vb() {
+////        if (peek().getValue().equals("(")) {
+////            consume();
+////            if (peek().getValue().equals(")")) {
+////                consume();
+////                return new Node(NodeType.empty_params, "()");
+////            } else {
+////                Node list = Vl();
+////                expect(")");
+////                return list;
+////            }
+////        } else if (peek().getType() == TokenType.IDENTIFIER) {
+////            return new Node(NodeType.identifier, consume().getValue());
+////        }
+////        throw new RuntimeException("Invalid Vb");
+////    }
 
     private Node Vb() {
         if (peek().getValue().equals("(")) {
@@ -318,6 +366,17 @@ public class Parser {
         throw new RuntimeException("Invalid Vb");
     }
 
+//    private Node Vl() {
+//        List<Node> vars = new ArrayList<>();
+//        vars.add(new Node(NodeType.identifier, consume().getValue()));
+//        while (peek().getValue().equals(",")) {
+//            consume();
+//            vars.add(new Node(NodeType.identifier, consume().getValue()));
+//        }
+//
+//        return new Node(NodeType.comma, ",", vars);
+//    }
+
     private Node Vl() {
         List<Node> vars = new ArrayList<>();
         vars.add(new Node(NodeType.identifier, consume().getValue()));
@@ -326,9 +385,13 @@ public class Parser {
             vars.add(new Node(NodeType.identifier, consume().getValue()));
         }
 
+        // If only one variable, return it directly instead of wrapping in comma
+        if (vars.size() == 1) {
+            return vars.get(0);
+        }
+
         return new Node(NodeType.comma, ",", vars);
     }
-
 
     public ArrayList<String> convertAST_toStringAST(Node root) {
         ArrayList<String> stringAST = new ArrayList<>();
@@ -382,13 +445,16 @@ public class Parser {
             case fcn_form:
                 stringAST.add(dots + "function_form");
                 break;
+            case y_star:
+                stringAST.add(dots + "<Y*>");
+                break;
             default :
                 stringAST.add(dots + node.value);
         }
     }
 
     public static void main(String[] args) {
-        LexicalAnalyser lex = new LexicalAnalyser("t12.txt");
+        LexicalAnalyser lex = new LexicalAnalyser("t2.txt");
         List<Token> passingtokens = lex.getTokens();
         Parser parser = new Parser(passingtokens);
         Node root = parser.parse();
