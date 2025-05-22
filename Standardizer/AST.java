@@ -1,10 +1,12 @@
 package Standardizer;
 
 import Parser.Node;
+import java.util.ArrayList;
 
 public class AST {
     private Node root;
     private boolean isStandardized = false;
+    private ArrayList<String> standardizedStringAST;
 
     public AST(Node root) {
         this.setRoot(root);
@@ -21,7 +23,24 @@ public class AST {
     public void standardize() {
         if (!this.isStandardized) {
             Standardizer standardizer = new Standardizer(this.root);
+            this.standardizedStringAST = standardizer.convertStandardizedAST_toStringAST(this.root);
             this.isStandardized = true;
+        }
+    }
+
+    public ArrayList<String> getStandardizedStringAST() {
+        if (!this.isStandardized) {
+            standardize();
+        }
+        return this.standardizedStringAST;
+    }
+
+    public void printStandardizedAST() {
+        if (!this.isStandardized) {
+            standardize();
+        }
+        for (String line : this.standardizedStringAST) {
+            System.out.println(line);
         }
     }
 

@@ -1,6 +1,4 @@
-let Factorial N =
-    let rec Factorial_helper Num Acc =
-        Num eq 0 -> Acc
-        | Factorial_helper (Num - 1) (Acc * Num)
-    in Factorial_helper N 1
-in Print(Factorial 10)
+let Check_odd_even N =
+    N- (N/2)*2 eq 0 -> 'Even'
+    | 'Odd'
+in Print(Check_odd_even 17)

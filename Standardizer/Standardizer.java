@@ -72,30 +72,6 @@ public class Standardizer {
                 n.type = NodeType.equal;
                 break;
 
-            // tuples
-//            case "tau":
-//                List<Node> childs = new ArrayList<>(n.children);
-//                n.children.clear();
-//                Node current = n;
-//                for (int i = 0; i < childs.size(); i++) {
-//                    Node x = childs.get(i);
-//                    current.type = NodeType.gamma;
-//                    current.value = "gamma";
-//                    Node node1 = new Node(NodeType.gamma, "gamma");
-//                    current.children.add(node1);
-//                    current.children.add(x);
-//                    current.children.get(0).children.add(new Node(NodeType.aug, "aug"));
-//
-//                    if (i == childs.size() - 1) {
-//                        current.children.get(0).children.add(new Node(NodeType.nil, "nil"));
-//                    } else {
-//                        Node next = new Node(NodeType.nil, "nil");
-//                        current.children.get(0).children.add(next);
-//                        current = next;
-//                    }
-//                }
-//                break;
-
             // multiparameter functions
             case "lambda":
                 if (n.children.size() > 2) {
@@ -170,30 +146,6 @@ public class Standardizer {
                 n.value = "=";
                 break;
 
-            // conditional operator
-//            case "->":
-//                Node condition = n.children.get(0);
-//                Node then_part = n.children.get(1);
-//                Node else_part = n.children.get(2);
-//
-//                // Create the standardized form: gamma gamma gamma Cond then else
-//                Node gamma1 = new Node(NodeType.gamma, "gamma");
-//                Node gamma2 = new Node(NodeType.gamma, "gamma");
-//                Node gamma3 = new Node(NodeType.gamma, "gamma");
-//                Node cond_node = new Node(NodeType.identifier, "Cond");
-//
-//                gamma3.children.add(cond_node);
-//                gamma3.children.add(condition);
-//                gamma2.children.add(gamma3);
-//                gamma2.children.add(then_part);
-//                gamma1.children.add(gamma2);
-//                gamma1.children.add(else_part);
-//
-//                n.children = gamma1.children;
-//                n.type = gamma1.type;
-//                n.value = gamma1.value;
-//                break;
-
             // rec
             case "rec":
                 Node X_rec = n.children.get(0).children.get(0);
@@ -219,15 +171,81 @@ public class Standardizer {
         return root;
     }
 
+    public ArrayList<String> convertStandardizedAST_toStringAST(Node root) {
+        ArrayList<String> stringST = new ArrayList<>();
+        List<Node> stack = new ArrayList<>();
+        List<String> dotStack = new ArrayList<>();
+
+        // Add root to processing
+        stack.add(root);
+        dotStack.add("");
+
+        while (!stack.isEmpty()) {
+            Node current = stack.remove(stack.size() - 1);
+            String dots = dotStack.remove(dotStack.size() - 1);
+
+            // Add current node to result
+            addStrings(dots, current, stringST);
+
+            // Add children in reverse order (so they are processed in correct order)
+            for (int i = current.children.size() - 1; i >= 0; i--) {
+                stack.add(current.children.get(i));
+                dotStack.add(dots + ".");
+            }
+        }
+
+        return stringST;
+    }
+
+    private void addStrings(String dots, Node node, ArrayList<String> stringST) {
+        switch(node.type) {
+            case identifier:
+                stringST.add(dots + "<ID:" + node.value + ">");
+                break;
+            case integer:
+                stringST.add(dots + "<INT:" + node.value + ">");
+                break;
+            case string:
+                stringST.add(dots + "<STR:" + node.value + ">");
+                break;
+            case true_value:
+                stringST.add(dots + "<" + node.value + ">");
+                break;
+            case false_value:
+                stringST.add(dots + "<" + node.value + ">");
+                break;
+            case nil:
+                stringST.add(dots + "<" + node.value + ">");
+                break;
+            case dummy:
+                stringST.add(dots + "<" + node.value + ">");
+                break;
+            case fcn_form:
+                stringST.add(dots + "function_form");
+                break;
+            case y_star:
+                stringST.add(dots + "<Y*>");
+                break;
+            default :
+                stringST.add(dots + node.value);
+        }
+    }
+
     public static void main(String[] args) {
-        LexicalAnalyser lex = new LexicalAnalyser("t1.txt");
+        LexicalAnalyser lex = new LexicalAnalyser("t2.txt");
         List<Token> passingtokens = lex.getTokens();
         Parser parser = new Parser(passingtokens);
         Node root = parser.parse();
-        Standardizer stand = new Standardizer(root);
-        display(root, "");
+
+        Standardizer standardizer = new Standardizer(root);
+        ArrayList<String> formattedStandardizedAST = standardizer.convertStandardizedAST_toStringAST(root);
+
+        for (String line : formattedStandardizedAST) {
+            System.out.println(line);
+        }
     }
 
+    // Keep the old display method for reference if needed
     public static void display(Node x, String prefix) {
         // Format output according to node type
         switch(x.type) {
