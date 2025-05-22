@@ -388,7 +388,7 @@ public class Parser {
     }
 
     public static void main(String[] args) {
-        LexicalAnalyser lex = new LexicalAnalyser("t12.txt");
+        LexicalAnalyser lex = new LexicalAnalyser("t1.txt");
         List<Token> passingtokens = lex.getTokens();
         Parser parser = new Parser(passingtokens);
         Node root = parser.parse();
