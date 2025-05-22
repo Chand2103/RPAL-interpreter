@@ -33,8 +33,6 @@ public class Parser {
         Node root = E();
         if (!peek().getType().equals(TokenType.EndOfTokens)) {
             throw new RuntimeException("Unparsed tokens remain!");
-        } else {
-            System.out.println("successfully parsed");
         }
         return root;
     }
@@ -310,7 +308,7 @@ public class Parser {
                 consume();
                 return new Node(NodeType.empty_params, "()");
             } else {
-                Node list = V1();
+                Node list = Vl();
                 expect(")");
                 return list;
             }
@@ -320,29 +318,88 @@ public class Parser {
         throw new RuntimeException("Invalid Vb");
     }
 
-    private Node V1() {
+    private Node Vl() {
         List<Node> vars = new ArrayList<>();
         vars.add(new Node(NodeType.identifier, consume().getValue()));
         while (peek().getValue().equals(",")) {
             consume();
             vars.add(new Node(NodeType.identifier, consume().getValue()));
         }
-        if(vars.size()>=2) {
-            return new Node(NodeType.comma, ",", vars);
+
+        return new Node(NodeType.comma, ",", vars);
+    }
+
+
+    public ArrayList<String> convertAST_toStringAST(Node root) {
+        ArrayList<String> stringAST = new ArrayList<>();
+        List<Node> stack = new ArrayList<>();
+        List<String> dotStack = new ArrayList<>();
+
+        // Add root to processing
+        stack.add(root);
+        dotStack.add("");
+
+        while (!stack.isEmpty()) {
+            Node current = stack.remove(stack.size() - 1);
+            String dots = dotStack.remove(dotStack.size() - 1);
+
+            // Add current node to result
+            addStrings(dots, current, stringAST);
+
+            // Add children in reverse order (so they are processed in correct order)
+            for (int i = current.children.size() - 1; i >= 0; i--) {
+                stack.add(current.children.get(i));
+                dotStack.add(dots + ".");
+            }
         }
-        else{
-            return vars.getFirst();
+
+        return stringAST;
+    }
+
+    private void addStrings(String dots, Node node, ArrayList<String> stringAST) {
+        switch(node.type) {
+            case identifier:
+                stringAST.add(dots + "<ID:" + node.value + ">");
+                break;
+            case integer:
+                stringAST.add(dots + "<INT:" + node.value + ">");
+                break;
+            case string:
+                stringAST.add(dots + "<STR:" + node.value + ">");
+                break;
+            case true_value:
+                stringAST.add(dots + "<" + node.value + ">");
+                break;
+            case false_value:
+                stringAST.add(dots + "<" + node.value + ">");
+                break;
+            case nil:
+                stringAST.add(dots + "<" + node.value + ">");
+                break;
+            case dummy:
+                stringAST.add(dots + "<" + node.value + ">");
+                break;
+            case fcn_form:
+                stringAST.add(dots + "function_form");
+                break;
+            default :
+                stringAST.add(dots + node.value);
         }
     }
 
     public static void main(String[] args) {
-        LexicalAnalyser lex = new LexicalAnalyser("t1.txt");
+        LexicalAnalyser lex = new LexicalAnalyser("t12.txt");
         List<Token> passingtokens = lex.getTokens();
         Parser parser = new Parser(passingtokens);
         Node root = parser.parse();
-        display(root, "");
+
+        ArrayList<String> formattedAST = parser.convertAST_toStringAST(root);
+        for (String line : formattedAST) {
+            System.out.println(line);
+        }
     }
 
+    // Keep the old display method for reference if needed
     public static void display(Node x, String prefix) {
         System.out.println(prefix + x.value);
         for (Node y : x.children) {

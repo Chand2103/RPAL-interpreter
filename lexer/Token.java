@@ -1,8 +1,8 @@
 package lexer;
 
 public class Token {
-    private TokenType type;
-    private String value;
+    public TokenType type;
+    public String value;
 
     public Token(TokenType type, String value) {
         this.type = type;

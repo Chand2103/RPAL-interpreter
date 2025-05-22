@@ -30,8 +30,17 @@ public class Lexer {
         List<Token> tokens = new ArrayList<>();
 
         int currentIndex = 0;
+        int lineNumber = 1;
+        int lineStartIndex = 0;
+
         while (currentIndex < input.length()) {
             char currentChar = input.charAt(currentIndex);
+
+            // Track line numbers
+            if (currentChar == '\n') {
+                lineNumber++;
+                lineStartIndex = currentIndex + 1;
+            }
 
             // Skip comments
             Matcher commentMatcher = commentPattern.matcher(input.substring(currentIndex));
@@ -99,19 +108,12 @@ public class Lexer {
                 continue;
             }
 
-            // If no match, throw exception
-            throw new RuntimeException("Unable to tokenize character: '" + currentChar + "' at index: " + currentIndex);
+            // If no match, throw exception with line and column info
+            int columnNumber = currentIndex - lineStartIndex + 1;
+            throw new RuntimeException("Unable to tokenize character: '" + currentChar +
+                    "' at line: " + lineNumber + ", column: " + columnNumber);
         }
 
-//        tokens.add(new Token(TokenType.EndOfTokens, "EOF"));
         return tokens;
     }
-
-//    public static void main(String[] args) {
-//        String input = "let x = 10 + 5; // This is a comment";
-//        List<Token> tokens = tokenize(input);
-//        for (Token token : tokens) {
-//            System.out.println(token);
-//        }
-//    }
 }
