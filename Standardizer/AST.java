@@ -29,7 +29,40 @@ public class AST {
         for (int n = 0; n < i; n++) {
             System.out.print(".");
         }
-        System.out.println(node.value);
+
+        // Format output according to node type
+        switch(node.type) {
+            case identifier:
+                System.out.println("<ID:" + node.value + ">");
+                break;
+            case integer:
+                System.out.println("<INT:" + node.value + ">");
+                break;
+            case string:
+                System.out.println("<STR:" + node.value + ">");
+                break;
+            case true_value:
+                System.out.println("<" + node.value + ">");
+                break;
+            case false_value:
+                System.out.println("<" + node.value + ">");
+                break;
+            case nil:
+                System.out.println("<" + node.value + ">");
+                break;
+            case dummy:
+                System.out.println("<" + node.value + ">");
+                break;
+            case fcn_form:
+                System.out.println("function_form");
+                break;
+            case y_star:
+                System.out.println("<Y*>");
+                break;
+            default:
+                System.out.println(node.value);
+        }
+
         node.children.forEach((child) -> preOrderTraverse(child, i+1));
     }
 

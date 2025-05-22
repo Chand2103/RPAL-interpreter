@@ -73,28 +73,28 @@ public class Standardizer {
                 break;
 
             // tuples
-            case "tau":
-                List<Node> childs = new ArrayList<>(n.children);
-                n.children.clear();
-                Node current = n;
-                for (int i = 0; i < childs.size(); i++) {
-                    Node x = childs.get(i);
-                    current.type = NodeType.gamma;
-                    current.value = "gamma";
-                    Node node1 = new Node(NodeType.gamma, "gamma");
-                    current.children.add(node1);
-                    current.children.add(x);
-                    current.children.get(0).children.add(new Node(NodeType.aug, "aug"));
-
-                    if (i == childs.size() - 1) {
-                        current.children.get(0).children.add(new Node(NodeType.nil, "nil"));
-                    } else {
-                        Node next = new Node(NodeType.nil, "nil");
-                        current.children.get(0).children.add(next);
-                        current = next;
-                    }
-                }
-                break;
+//            case "tau":
+//                List<Node> childs = new ArrayList<>(n.children);
+//                n.children.clear();
+//                Node current = n;
+//                for (int i = 0; i < childs.size(); i++) {
+//                    Node x = childs.get(i);
+//                    current.type = NodeType.gamma;
+//                    current.value = "gamma";
+//                    Node node1 = new Node(NodeType.gamma, "gamma");
+//                    current.children.add(node1);
+//                    current.children.add(x);
+//                    current.children.get(0).children.add(new Node(NodeType.aug, "aug"));
+//
+//                    if (i == childs.size() - 1) {
+//                        current.children.get(0).children.add(new Node(NodeType.nil, "nil"));
+//                    } else {
+//                        Node next = new Node(NodeType.nil, "nil");
+//                        current.children.get(0).children.add(next);
+//                        current = next;
+//                    }
+//                }
+//                break;
 
             // multiparameter functions
             case "lambda":
@@ -171,28 +171,28 @@ public class Standardizer {
                 break;
 
             // conditional operator
-            case "->":
-                Node condition = n.children.get(0);
-                Node then_part = n.children.get(1);
-                Node else_part = n.children.get(2);
-
-                // Create the standardized form: gamma gamma gamma Cond then else
-                Node gamma1 = new Node(NodeType.gamma, "gamma");
-                Node gamma2 = new Node(NodeType.gamma, "gamma");
-                Node gamma3 = new Node(NodeType.gamma, "gamma");
-                Node cond_node = new Node(NodeType.identifier, "Cond");
-
-                gamma3.children.add(cond_node);
-                gamma3.children.add(condition);
-                gamma2.children.add(gamma3);
-                gamma2.children.add(then_part);
-                gamma1.children.add(gamma2);
-                gamma1.children.add(else_part);
-
-                n.children = gamma1.children;
-                n.type = gamma1.type;
-                n.value = gamma1.value;
-                break;
+//            case "->":
+//                Node condition = n.children.get(0);
+//                Node then_part = n.children.get(1);
+//                Node else_part = n.children.get(2);
+//
+//                // Create the standardized form: gamma gamma gamma Cond then else
+//                Node gamma1 = new Node(NodeType.gamma, "gamma");
+//                Node gamma2 = new Node(NodeType.gamma, "gamma");
+//                Node gamma3 = new Node(NodeType.gamma, "gamma");
+//                Node cond_node = new Node(NodeType.identifier, "Cond");
+//
+//                gamma3.children.add(cond_node);
+//                gamma3.children.add(condition);
+//                gamma2.children.add(gamma3);
+//                gamma2.children.add(then_part);
+//                gamma1.children.add(gamma2);
+//                gamma1.children.add(else_part);
+//
+//                n.children = gamma1.children;
+//                n.type = gamma1.type;
+//                n.value = gamma1.value;
+//                break;
 
             // rec
             case "rec":
@@ -229,7 +229,39 @@ public class Standardizer {
     }
 
     public static void display(Node x, String prefix) {
-        System.out.println(prefix + x.value);
+        // Format output according to node type
+        switch(x.type) {
+            case identifier:
+                System.out.println(prefix + "<ID:" + x.value + ">");
+                break;
+            case integer:
+                System.out.println(prefix + "<INT:" + x.value + ">");
+                break;
+            case string:
+                System.out.println(prefix + "<STR:" + x.value + ">");
+                break;
+            case true_value:
+                System.out.println(prefix + "<" + x.value + ">");
+                break;
+            case false_value:
+                System.out.println(prefix + "<" + x.value + ">");
+                break;
+            case nil:
+                System.out.println(prefix + "<" + x.value + ">");
+                break;
+            case dummy:
+                System.out.println(prefix + "<" + x.value + ">");
+                break;
+            case fcn_form:
+                System.out.println(prefix + "function_form");
+                break;
+            case y_star:
+                System.out.println(prefix + "<Y*>");
+                break;
+            default:
+                System.out.println(prefix + x.value);
+        }
+
         for (Node y : x.children) {
             String newprefix = prefix + ".";
             display(y, newprefix);

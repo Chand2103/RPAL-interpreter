@@ -382,6 +382,9 @@ public class Parser {
             case fcn_form:
                 stringAST.add(dots + "function_form");
                 break;
+            case y_star:
+                stringAST.add(dots + "<Y*>");
+                break;
             default :
                 stringAST.add(dots + node.value);
         }
