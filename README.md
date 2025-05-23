@@ -16,7 +16,7 @@ Follow the instructions below to clone, compile, and run the RPAL interpreter.
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/rpal-interpreter.git
+   git clone https://github.com/Chand2103/RPAL-interpreter.git
    cd rpal-interpreter
    ```
 
@@ -25,6 +25,10 @@ Follow the instructions below to clone, compile, and run the RPAL interpreter.
    ```bash
    javac myrpal.java
    ```
+   or using mingw
+   ```bash
+   mingw32-make 
+   ```   
 
 ## Usage
 
