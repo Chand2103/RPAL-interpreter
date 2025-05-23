@@ -33,10 +33,4 @@ public enum NodeType {
     equal,
     comma,
     empty_params,
-//	y_star,
-//	lambda_expression,
-//	beta_operator,
-//	env_operator,
-//	tuple,
-//	eta_expression,
 }

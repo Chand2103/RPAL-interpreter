@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import Lexer.Token;
 import Lexer.TokenType;
+
+/**
+
+    Parser for constructing an Abstract Syntax Tree (AST) from a list of tokens.
+    Supports recursive descent parsing based on grammar rules .
+    Outputs a node-based AST and an indented string representation.
+
+ **/
+
 
 public class Parser {
     private List<Token> tokens;
