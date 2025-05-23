@@ -9,6 +9,11 @@ public class Token {
         this.value = value;
     }
 
-    // Getters for type and value
-    // ...
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
