@@ -44,6 +44,16 @@ public class Parser {
         }
     }
 
+    /**
+
+       Converts the internal Abstract Syntax Tree (AST) into a serialized list of strings.
+       Each node is represented as a string with indentation reflecting the tree structure.
+       Uses a stack-based approach to traverse the AST nodes and formats them into a human-readable form.
+       Finally, reverses the resulting list to present the AST in the correct order.
+       @return A list of strings representing the serialized AST.
+
+     **/
+
     public ArrayList<String> serializeAST(){
         String dots = "";
         List<Node> stack= new ArrayList<Node>();
@@ -85,6 +95,14 @@ public class Parser {
         Collections.reverse(stringAST);
         return stringAST;
     }
+
+    /**
+
+       Formats a single AST node into a string representation and adds it to the output list.
+       @param dots Indentation string representing the current node’s depth in the AST
+       @param node The AST node to format and add
+
+     **/
 
     void formatAndAddNode(String dots, Node node) {
         switch(node.type) {
