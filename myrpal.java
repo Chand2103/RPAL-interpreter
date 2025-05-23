@@ -1,4 +1,4 @@
-import Engine.Evaluvator;
+import CSE.Interpreter;
 
 public class myrpal {
 
@@ -40,7 +40,7 @@ public class myrpal {
             System.out.println("Invalid Arguments Passing!");
             return;
         }
-        System.out.println(Evaluvator.evaluvate(fn,isPrintAST,isPrintST));                                   // get and print the answer
+        System.out.println(Interpreter.runProgram(fn,isPrintAST,isPrintST));                                   // get and print the answer
 
 
 

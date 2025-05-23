@@ -1,4 +1,4 @@
-package Engine;
+package CSE;
 
 import Symbols.*;
 import java.util.ArrayList;
@@ -30,9 +30,6 @@ public class CSEMachine {
         E currentEnvironment = this.environment.get(0);
         int j = 1;
         while (!control.isEmpty()) {
-//        	printControl();
-//	        printStack();
-//	        printEnvironment();
             // pop last element of the control
             Symbol currentSymbol = control.get(control.size()-1);
             control.remove(control.size()-1);
@@ -173,8 +170,7 @@ public class CSEMachine {
                 }
                 // rule no. 5
             } else if (currentSymbol instanceof E) {
-//            	System.out.println(this.stack.size());
-//            	System.out.println(this.stack.get(0).getData());
+
 
 
                 this.stack.remove(1);
@@ -201,7 +197,6 @@ public class CSEMachine {
                     Symbol rator = currentSymbol;
                     Symbol rand1 = this.stack.get(0);
                     Symbol rand2 = this.stack.get(1);
-//                    System.out.println(rand2);
                     this.stack.remove(0);
                     this.stack.remove(0);
                     this.stack.add(0, this.applyBinaryOperation(rator, rand1, rand2));
@@ -336,7 +331,6 @@ public class CSEMachine {
         } else if ("le".equals(rator.getData())) {
             int val1 = Integer.parseInt(rand1.getData());
             String s1=rand2.getData();
-//            System.out.println(s1);
             int val2 = Integer.parseInt(s1);
             return new Bool(Boolean.toString(val1 <= val2));
         } else if ("gr".equals(rator.getData())) {
