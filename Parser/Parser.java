@@ -51,7 +51,7 @@ public class Parser {
         while(!AST.isEmpty()) {
             if(stack.isEmpty()) {
                 if(AST.get(AST.size()-1).noOfChildren==0) {
-                    addStrings(dots,AST.remove(AST.size()-1));
+                    formatAndAddNode(dots,AST.remove(AST.size()-1));
                 }
                 else {
                     Node node = AST.remove(AST.size()-1);
@@ -68,7 +68,7 @@ public class Parser {
                     stack.add(AST.remove(AST.size()-1));
                     dots += ".";
                     while(stack.get(stack.size()-1).noOfChildren==0) {
-                        addStrings(dots,stack.remove(stack.size()-1));
+                        formatAndAddNode(dots,stack.remove(stack.size()-1));
                         if(stack.isEmpty()) break;
                         dots = dots.substring(0, dots.length() - 1);
                         Node node =stack.remove(stack.size()-1);
@@ -86,7 +86,7 @@ public class Parser {
         return stringAST;
     }
 
-    void addStrings(String dots,Node node) {
+    void formatAndAddNode(String dots, Node node) {
         switch(node.type) {
             case identifier:
                 stringAST.add(dots+"<ID:"+node.value+">");
@@ -135,7 +135,7 @@ public class Parser {
                 tokens.remove(0);
                 D();
                 if(!tokens.get(0).value.equals("in")) {
-                    System.out.println("Parse error at E : 'in' Expected");
+                    System.out.println("Parsing Failed: Error at E — expected 'in'.");
                 }
                 tokens.remove(0);
                 E();
@@ -149,7 +149,7 @@ public class Parser {
                     n++;
                 } while(tokens.get(0).type.equals(TokenType.IDENTIFIER) || tokens.get(0).value.equals("("));
                 if(!tokens.get(0).value.equals(".")) {
-                    System.out.println("Parse error at E : '.' Expected");
+                    System.out.println("Parsing Failed: Error at E — expected '.'.");
                 }
                 tokens.remove(0);
                 E();
@@ -231,7 +231,7 @@ public class Parser {
             tokens.remove(0); // Remove '->'
             Tc();
             if(!tokens.get(0).value.equals("|")){
-                System.out.println("Parse error at Tc: conditional '|' expected");
+                System.out.println("Parsing Failed: Error at Tc — expected '|'.");
             }
             tokens.remove(0); //Remove '|'
             Tc();
@@ -413,7 +413,7 @@ public class Parser {
             tokens.remove(0); //Remove @
 
             if(!tokens.get(0).type.equals(TokenType.IDENTIFIER)){
-                System.out.println("Parsing error at Ap: IDENTIFIER EXPECTED");
+                System.out.println("Parsing Failed: Error at Ap — expected IDENTIFIER.");
             }
             AST.add(new Node(NodeType.identifier,tokens.get(0).value,0));
             tokens.remove(0); // Remove IDENTIFIER
@@ -456,63 +456,61 @@ public class Parser {
 
      **/
 
-    void Rn(){
-        switch(tokens.get(0).type){
+    void Rn() {
+        switch (tokens.get(0).type) {
             case IDENTIFIER:
-                AST.add(new Node(NodeType.identifier,tokens.get(0).value,0));
+                AST.add(new Node(NodeType.identifier, tokens.get(0).value, 0));
                 tokens.remove(0);
                 break;
             case INTEGER:
-                AST.add(new Node(NodeType.integer,tokens.get(0).value,0));
+                AST.add(new Node(NodeType.integer, tokens.get(0).value, 0));
                 tokens.remove(0);
                 break;
             case STRING:
-                AST.add(new Node(NodeType.string,tokens.get(0).value,0));
+                AST.add(new Node(NodeType.string, tokens.get(0).value, 0));
                 tokens.remove(0);
                 break;
             case KEYWORD:
-                switch(tokens.get(0).value){
+                switch (tokens.get(0).value) {
                     case "true":
-                        AST.add(new Node(NodeType.true_value,tokens.get(0).value,0));
+                        AST.add(new Node(NodeType.true_value, tokens.get(0).value, 0));
                         tokens.remove(0);
                         break;
                     case "false":
-                        AST.add(new Node(NodeType.false_value,tokens.get(0).value,0));
+                        AST.add(new Node(NodeType.false_value, tokens.get(0).value, 0));
                         tokens.remove(0);
                         break;
                     case "nil":
-                        AST.add(new Node(NodeType.nil,tokens.get(0).value,0));
+                        AST.add(new Node(NodeType.nil, tokens.get(0).value, 0));
                         tokens.remove(0);
                         break;
                     case "dummy":
-                        AST.add(new Node(NodeType.dummy,tokens.get(0).value,0));
+                        AST.add(new Node(NodeType.dummy, tokens.get(0).value, 0));
                         tokens.remove(0);
                         break;
                     default:
-                        System.out.println("Parse Error at Rn: Unexpected KEYWORD");
+                        System.out.println("Parsing Failed: Error at Rn — unexpected keyword encountered.");
                         break;
                 }
                 break;
             case PUNCTUATION:
-                if(tokens.get(0).value.equals("(")) {
-                    tokens.remove(0); //Remove '('
-
+                if (tokens.get(0).value.equals("(")) {
+                    tokens.remove(0); // Remove '('
                     E();
-
-                    if(!tokens.get(0).value.equals(")")) {
-                        System.out.println("Parsing error at Rn: Expected a matching ')'");
+                    if (!tokens.get(0).value.equals(")")) {
+                        System.out.println("Parsing Failed: Error at Rn — expected matching ')'.");
                     }
-                    tokens.remove(0); //Remove ')'
+                    tokens.remove(0); // Remove ')'
+                } else {
+                    System.out.println("Parsing Failed: Error at Rn — unexpected punctuation.");
                 }
-                else System.out.println("Parsing error at Rn: Unexpected PUNCTUATION");
                 break;
             default:
-                System.out.println("Parsing error at Rn: Expected a Rn, but got different");
+                System.out.println("Parsing Failed: Error at Rn — unexpected token type.");
                 break;
         }
-
-
     }
+
 
     /**
 
@@ -580,54 +578,57 @@ public class Parser {
      **/
 
     void Db() {
-        if( tokens.get(0).type.equals(TokenType.PUNCTUATION) && tokens.get(0).value.equals("(")){
+        if (tokens.get(0).type.equals(TokenType.PUNCTUATION) && tokens.get(0).value.equals("(")) {
             tokens.remove(0);
             D();
-            if(!tokens.get(0).value.equals(")")) {
-                System.out.println("Parsing error at Db #1");
+            if (!tokens.get(0).value.equals(")")) {
+                System.out.println("Parsing Failed: Error at Db #1 — expected closing ')'.");
             }
             tokens.remove(0);
         }
-        else if(tokens.get(0).type.equals(TokenType.IDENTIFIER)){
-            if(tokens.get(1).value.equals("(") || tokens.get(1).type.equals(TokenType.IDENTIFIER)) { // Expect a fcn_form
-                AST.add(new Node(NodeType.identifier,tokens.get(0).value,0));
+        else if (tokens.get(0).type.equals(TokenType.IDENTIFIER)) {
+            if (tokens.get(1).value.equals("(") || tokens.get(1).type.equals(TokenType.IDENTIFIER)) { // Expect a fcn_form
+                AST.add(new Node(NodeType.identifier, tokens.get(0).value, 0));
                 tokens.remove(0); // Remove ID
 
-                int n = 1; // Identifier child
+                int n = 1; // Identifier child count
                 do {
                     Vb();
                     n++;
-                } while(tokens.get(0).type.equals(TokenType.IDENTIFIER) || tokens.get(0).value.equals("("));
-                if(!tokens.get(0).value.equals("=")) {
-                    System.out.println("Parsing error at Db #2");
+                } while (tokens.get(0).type.equals(TokenType.IDENTIFIER) || tokens.get(0).value.equals("("));
+
+                if (!tokens.get(0).value.equals("=")) {
+                    System.out.println("Parsing Failed: Error at Db #2 — expected '='.");
                 }
                 tokens.remove(0);
                 E();
 
-                AST.add(new Node(NodeType.fcn_form,"fcn_form",n+1));
-
+                AST.add(new Node(NodeType.fcn_form, "fcn_form", n + 1));
             }
             else if (tokens.get(1).value.equals("=")) {
-                AST.add(new Node(NodeType.identifier,tokens.get(0).value,0));
+                AST.add(new Node(NodeType.identifier, tokens.get(0).value, 0));
                 tokens.remove(0); // Remove identifier
-                tokens.remove(0); // Remove equal
+                tokens.remove(0); // Remove '='
                 E();
-                AST.add(new Node(NodeType.equal,"=",2));
+                AST.add(new Node(NodeType.equal, "=", 2));
             }
-            else if (tokens.get(1).value.equals(",")){
+            else if (tokens.get(1).value.equals(",")) {
                 Vl();
-                if(!tokens.get(0).value.equals("=")) {
-                    System.out.println("Parsing error at Db");
+                if (!tokens.get(0).value.equals("=")) {
+                    System.out.println("Parsing Failed: Error at Db — expected '=' after variable list.");
                 }
                 tokens.remove(0);
                 E();
 
-                AST.add(new Node(NodeType.equal,"=",2));
+                AST.add(new Node(NodeType.equal, "=", 2));
             }
-
-
+            else {
+                System.out.println("Parsing Failed: Error at Db — unexpected token sequence.");
+            }
         }
-
+        else {
+            System.out.println("Parsing Failed: Error at Db — expected identifier or '('.");
+        }
     }
 
 
@@ -640,27 +641,28 @@ public class Parser {
 
      **/
 
-    void Vb(){
-        if(tokens.get(0).type.equals(TokenType.PUNCTUATION) && tokens.get(0).value.equals("(")) {
+    void Vb() {
+        if (tokens.get(0).type.equals(TokenType.PUNCTUATION) && tokens.get(0).value.equals("(")) {
             tokens.remove(0);
-            boolean isVl=false;
+            boolean isVl = false;
 
-            if(tokens.get(0).type .equals(TokenType.IDENTIFIER) ){
+            if (tokens.get(0).type.equals(TokenType.IDENTIFIER)) {
                 Vl();
                 isVl = true;
             }
-            if(!tokens.get(0).value.equals(")")){
-                System.out.println("Parse error unmatch )");
+            if (!tokens.get(0).value.equals(")")) {
+                System.out.println("Parsing Failed: Error at Vb — unmatched ')'.");
             }
             tokens.remove(0);
-            if(!isVl) AST.add(new Node(NodeType.empty_params,"()",0));
-
-        } else if(tokens.get(0).type .equals(TokenType.IDENTIFIER) ){
-            AST.add(new Node(NodeType.identifier,tokens.get(0).value,0));
+            if (!isVl) {
+                AST.add(new Node(NodeType.empty_params, "()", 0));
+            }
+        } else if (tokens.get(0).type.equals(TokenType.IDENTIFIER)) {
+            AST.add(new Node(NodeType.identifier, tokens.get(0).value, 0));
             tokens.remove(0);
         }
-
     }
+
 
     /**
 
@@ -672,17 +674,16 @@ public class Parser {
     void Vl() {
         int n = 0;
         do {
-            if(n>0) {
-                tokens.remove(0);
+            if (n > 0) {
+                tokens.remove(0); // remove comma
             }
-            if(!tokens.get(0).type.equals(TokenType.IDENTIFIER)) {
-                System.out.println("Parse error: a ID was expected )");
+            if (!tokens.get(0).type.equals(TokenType.IDENTIFIER)) {
+                System.out.println("Parsing Failed: Error at Vl — expected an identifier.");
             }
-            AST.add(new Node(NodeType.identifier,tokens.get(0).value,0));
+            AST.add(new Node(NodeType.identifier, tokens.get(0).value, 0));
             tokens.remove(0);
             n++;
         } while (tokens.get(0).value.equals(","));
-        AST.add(new Node(NodeType.comma,",",n));
+        AST.add(new Node(NodeType.comma, ",", n));
     }
-
 }
