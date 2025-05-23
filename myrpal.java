@@ -13,6 +13,7 @@ public class myrpal {
             fn = "t1.txt";
             isPrintAST = true;
             isPrintST = true;
+            Interpreter.runProgram(fn,isPrintAST,isPrintST);
         }
         else if(args.length==3 && (
                 (args[0].equalsIgnoreCase("-ast") && args[1].equalsIgnoreCase("-st")) ||
