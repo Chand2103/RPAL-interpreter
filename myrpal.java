@@ -1,4 +1,4 @@
-// This code retrieves command-line arguments passed to the program (e.g., java Myrpal -st, -ast, filename),
+// This code retrieves command-line arguments passed to the program (e.g., java myrpal -st, -ast, filename),
 // and configures the interpreter accordingly by setting the isPrintSt, isPrintAst flags, and the filename (fn).
 
 
