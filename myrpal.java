@@ -1,3 +1,7 @@
+// This code retrieves command-line arguments passed to the program (e.g., java Myrpal -st, -ast, filename),
+// and configures the interpreter accordingly by setting the isPrintSt, isPrintAst flags, and the filename (fn).
+
+
 import CSE.Interpreter;
 
 public class myrpal {
@@ -19,14 +23,17 @@ public class myrpal {
             fn = args[2];
             isPrintAST=true;
             isPrintST=true;
+            Interpreter.runProgram(fn,isPrintAST,isPrintST);
         }
         else if(args.length==2){
             fn=args[1];
             if(args[0].equalsIgnoreCase("-ast")){
                 isPrintAST=true;
+                Interpreter.runProgram(fn,isPrintAST,isPrintST);
             }
             else if(args[0].equalsIgnoreCase("-st")){
                 isPrintST=true;
+                Interpreter.runProgram(fn,isPrintAST,isPrintST);
             }
             else{
                 System.out.println("Invalid Arguments Passing!");
@@ -35,14 +42,11 @@ public class myrpal {
         }
         else if(args.length==1){
             fn = args[0];
+            System.out.println(Interpreter.runProgram(fn,isPrintAST,isPrintST)); 
         }
         else{
             System.out.println("Invalid Arguments Passing!");
             return;
-        }
-        System.out.println(Interpreter.runProgram(fn,isPrintAST,isPrintST));                                   // get and print the answer
-
-
-
+        }                               
     }
 }
