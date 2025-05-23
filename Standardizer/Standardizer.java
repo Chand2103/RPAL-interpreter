@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Standardizer {
-    Node root;
+    public Node root;
 
     public Standardizer(Node root) {
         this.root = root;
