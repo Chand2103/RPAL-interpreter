@@ -8,10 +8,17 @@ import java.util.regex.*;
 
 import Exception.CustomException;
 
+/**
+
+  Lexical Analyzer for tokenizing source code files.
+  Recognizes identifiers, keywords, integers, operators, strings, punctuation, and comments.
+
+ **/
 public class LexicalAnalyser {
     private final String inputFileName;
     private final List<Token> tokens = new ArrayList<>();
 
+    // Regular expression patterns for matching different token types
     private static final String LETTER = "[a-zA-Z]";
     private static final String DIGIT = "[0-9]";
     private static final String ESCAPE = "(\\\\'|\\\\t|\\\\n|\\\\\\\\)";
@@ -25,6 +32,7 @@ public class LexicalAnalyser {
     private static final String STRING = "'(" +
             LETTER + "|" + DIGIT + "|" + OPERATOR_SYMBOL + "|" + ESCAPE + "|" + PUNCTUATION + "|" + SPACES + ")*'";
 
+    // Compiled patterns for better performance
     private static final Pattern IDENTIFIER_PATTERN = Pattern.compile(IDENTIFIER);
     private static final Pattern INTEGER_PATTERN = Pattern.compile(INTEGER);
     private static final Pattern OPERATOR_PATTERN = Pattern.compile(OPERATOR);
@@ -33,6 +41,7 @@ public class LexicalAnalyser {
     private static final Pattern SPACES_PATTERN = Pattern.compile(SPACES);
     private static final Pattern COMMENT_PATTERN = Pattern.compile(COMMENT);
 
+    // Reserved keywords in RPAL language
     private static final Set<String> KEYWORDS = Set.of(
             "let", "in", "fn", "where", "aug", "or", "not", "gr", "ge", "ls",
             "le", "eq", "ne", "true", "false", "nil", "dummy", "within", "and", "rec"
@@ -42,6 +51,13 @@ public class LexicalAnalyser {
         this.inputFileName = inputFileName;
     }
 
+    /**
+
+       Scans the input file and returns a list of tokens.
+       @return List of tokens found in the file
+       @throws CustomException if tokenization fails
+
+     **/
     public List<Token> scan() throws CustomException {
         int lineNumber = 0;
 
@@ -53,7 +69,7 @@ public class LexicalAnalyser {
                 try {
                     tokenizeLine(line, lineNumber);
                 } catch (CustomException e) {
-                    throw new CustomException(e.getMessage() + " in LINE: " + lineNumber + "\nERROR in Lexer.");
+                    throw new CustomException(e.getMessage() + " in line: " + lineNumber + "\nERROR in Lexer.");
                 }
             }
         } catch (IOException e) {
@@ -63,6 +79,14 @@ public class LexicalAnalyser {
         return tokens;
     }
 
+    /**
+
+      Tokenizes a single line of input by matching against different token patterns.
+      @param line The line to tokenize
+      @param lineNumber Current line number for error reporting
+      @throws CustomException if an unrecognized character is encountered
+
+     **/
     private void tokenizeLine(String line, int lineNumber) throws CustomException {
         int currentIndex = 0;
 
@@ -72,26 +96,31 @@ public class LexicalAnalyser {
 
             Matcher matcher;
 
+            // Skip comments - everything after "//" is ignored
             matcher = COMMENT_PATTERN.matcher(remaining);
             if (matcher.lookingAt()) {
                 currentIndex += matcher.group().length();
                 continue;
             }
 
+            // Skip whitespace and tabs
             matcher = SPACES_PATTERN.matcher(remaining);
             if (matcher.lookingAt()) {
                 currentIndex += matcher.group().length();
                 continue;
             }
 
+            // Match identifiers and keywords
             matcher = IDENTIFIER_PATTERN.matcher(remaining);
             if (matcher.lookingAt()) {
                 String match = matcher.group();
+                // Check if identifier is actually a keyword
                 tokens.add(new Token(KEYWORDS.contains(match) ? TokenType.KEYWORD : TokenType.IDENTIFIER, match));
                 currentIndex += match.length();
                 continue;
             }
 
+            // Match integer literals
             matcher = INTEGER_PATTERN.matcher(remaining);
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenType.INTEGER, matcher.group()));
@@ -99,6 +128,7 @@ public class LexicalAnalyser {
                 continue;
             }
 
+            // Match operators (can be multi-character)
             matcher = OPERATOR_PATTERN.matcher(remaining);
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenType.OPERATOR, matcher.group()));
@@ -106,6 +136,7 @@ public class LexicalAnalyser {
                 continue;
             }
 
+            // Match string literals (enclosed in single quotes)
             matcher = STRING_PATTERN.matcher(remaining);
             if (matcher.lookingAt()) {
                 tokens.add(new Token(TokenType.STRING, matcher.group()));
@@ -113,6 +144,7 @@ public class LexicalAnalyser {
                 continue;
             }
 
+            // Match single-character punctuation
             matcher = PUNCTUATION_PATTERN.matcher(Character.toString(currentChar));
             if (matcher.matches()) {
                 tokens.add(new Token(TokenType.PUNCTUATION, Character.toString(currentChar)));
@@ -120,6 +152,7 @@ public class LexicalAnalyser {
                 continue;
             }
 
+            // If no pattern matches, throw an error
             throw new CustomException("Cannot tokenize the Character: " + currentChar + " at Index: " + currentIndex);
         }
     }

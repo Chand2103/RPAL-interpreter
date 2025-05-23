@@ -5,10 +5,6 @@ import Exception.CustomException;
 
 public class TestLexicalAnalyzer {
     public static void main(String[] args) {
-//      if (args.length != 1) {
-//          System.out.println("Usage: java RPALScanner <input_file>");
-//          return;
-//      }
 
         String inputFileName = "t1.txt";
         LexicalAnalyser scanner = new LexicalAnalyser(inputFileName);
