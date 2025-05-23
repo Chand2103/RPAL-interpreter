@@ -54,8 +54,8 @@ Run the interpreter with the following commands depending on the desired output:
 
 ### Explanation
 
-- `-st`: Displays the Standardized Tree along with the program output.
-- `-ast`: Displays the Abstract Syntax Tree along with the program output.
+- `-st`: Displays the Standardized Tree
+- `-ast`: Displays the Abstract Syntax Tree
 
 ## Example
 
