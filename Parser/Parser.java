@@ -1,11 +1,12 @@
 package Parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import Lexer.Token;
 import Lexer.TokenType;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+
 
 /**
 
@@ -34,8 +35,8 @@ public class Parser {
             return AST;
         }
         else {
-            System.out.println("Parsing Unsuccessful!...........");
-            System.out.println("REMAINING UNPARSED TOKENS:");
+            System.out.println("Error: Parsing could not be completed.");
+            System.out.println("Unprocessed tokens found:");
             for (Token token : tokens) {
                 System.out.println("<" + token.type + ", " + token.value + ">");
             }
@@ -43,7 +44,7 @@ public class Parser {
         }
     }
 
-    public ArrayList<String> convertAST_toStringAST(){
+    public ArrayList<String> serializeAST(){
         String dots = "";
         List<Node> stack= new ArrayList<Node>();
 
@@ -189,7 +190,7 @@ public class Parser {
         Ta();
         int n = 1;
         while (tokens.get(0).value.equals(",")){
-              tokens.remove(0); // Remove coma(,)
+              tokens.remove(0); // Remove comma
             Ta();
             ++n;
         }
@@ -282,7 +283,6 @@ public class Parser {
 
     void Bs(){
         if(tokens.get(0).value.equals("not")){
-            // System.out.println(tokens.get(0).value);
             tokens.remove(0); //Remove 'not'
             Bp();
             AST.add(new Node(NodeType.op_not,"not",1));
@@ -410,8 +410,7 @@ public class Parser {
     void Ap(){
         R();
         while(tokens.get(0).value.equals("@")){
-            // System.out.println(tokens.get(0).value);
-            tokens.remove(0); //Remove @ operator
+            tokens.remove(0); //Remove @
 
             if(!tokens.get(0).type.equals(TokenType.IDENTIFIER)){
                 System.out.println("Parsing error at Ap: IDENTIFIER EXPECTED");

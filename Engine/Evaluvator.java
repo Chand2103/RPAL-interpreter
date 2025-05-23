@@ -26,7 +26,7 @@ public class Evaluvator {
             Parser parser = new Parser(tokens);
             AST=parser.parse();
 
-            ArrayList<String> stringAST = parser.convertAST_toStringAST();
+            ArrayList<String> stringAST = parser.serializeAST();
             if(isPrintAST){
                 for(String string: stringAST){
                     System.out.println(string);
