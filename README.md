@@ -1,58 +1,63 @@
-RPAL Interpreter
+# RPAL Interpreter
+
 This repository contains an interpreter for the RPAL (Right-reference Pedagogic Algorithmic Language) language implemented in Java.
 
-Getting Started
+## Getting Started
+
 Follow the instructions below to clone, compile, and run the RPAL interpreter.
 
-Prerequisites
-Java Development Kit (JDK) installed (version 8 or higher recommended)
+### Prerequisites
 
-Git installed (to clone the repo)
+- Java Development Kit (JDK) installed (version 8 or higher recommended)
+- Git installed (to clone the repo)
 
-Installation
-Clone the repository:
+### Installation
 
-bash
-Copy
-Edit
-git clone https://github.com/yourusername/rpal-interpreter.git
-cd rpal-interpreter
-Compile the interpreter:
+1. **Clone the repository:**
 
-bash
-Copy
-Edit
-javac myrpal.java
-Usage
+   ```bash
+   git clone https://github.com/yourusername/rpal-interpreter.git
+   cd rpal-interpreter
+   ```
+
+2. **Compile the interpreter:**
+
+   ```bash
+   javac myrpal.java
+   ```
+
+## Usage
+
 Run the interpreter with the following commands depending on the desired output:
 
-To get just the output:
+- **To get just the output:**
 
-bash
-Copy
-Edit
-java myrpal <filename>
-To get output + Standardized Tree (ST):
+  ```bash
+  java myrpal <filename>
+  ```
 
-bash
-Copy
-Edit
-java myrpal -st <filename>
-To get output + Abstract Syntax Tree (AST):
+- **To get output + Standardized Tree (ST):**
 
-bash
-Copy
-Edit
-java myrpal -ast <filename>
-Explanation
--st: Displays the Standardized Tree along with the program output.
+  ```bash
+  java myrpal -st <filename>
+  ```
 
--ast: Displays the Abstract Syntax Tree along with the program output.
+- **To get output + Abstract Syntax Tree (AST):**
 
-Example
-bash
-Copy
-Edit
+  ```bash
+  java myrpal -ast <filename>
+  ```
+
+### Explanation
+
+- `-st`: Displays the Standardized Tree along with the program output.
+- `-ast`: Displays the Abstract Syntax Tree along with the program output.
+
+## Example
+
+```bash
 java myrpal example.rpal
 java myrpal -st example.rpal
 java myrpal -ast example.rpal
+```
+
