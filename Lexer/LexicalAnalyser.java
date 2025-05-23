@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.*;
 
-import Exception.CustomException;
+import Exceptions.InterpreterException;
 
 /**
 
@@ -55,10 +55,10 @@ public class LexicalAnalyser {
 
        Scans the input file and returns a list of tokens.
        @return List of tokens found in the file
-       @throws CustomException if tokenization fails
+       @throws InterpreterException if tokenization fails
 
      **/
-    public List<Token> scan() throws CustomException {
+    public List<Token> scan() throws InterpreterException {
         int lineNumber = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
@@ -68,8 +68,8 @@ public class LexicalAnalyser {
                 lineNumber++;
                 try {
                     tokenizeLine(line, lineNumber);
-                } catch (CustomException e) {
-                    throw new CustomException(e.getMessage() + " in line: " + lineNumber + "\nERROR in Lexer.");
+                } catch (InterpreterException e) {
+                    throw new InterpreterException(e.getMessage() + " in line: " + lineNumber + "\nERROR in Lexer.");
                 }
             }
         } catch (IOException e) {
@@ -84,10 +84,10 @@ public class LexicalAnalyser {
       Tokenizes a single line of input by matching against different token patterns.
       @param line The line to tokenize
       @param lineNumber Current line number for error reporting
-      @throws CustomException if an unrecognized character is encountered
+      @throws InterpreterException if an unrecognized character is encountered
 
      **/
-    private void tokenizeLine(String line, int lineNumber) throws CustomException {
+    private void tokenizeLine(String line, int lineNumber) throws InterpreterException {
         int currentIndex = 0;
 
         while (currentIndex < line.length()) {
@@ -153,7 +153,7 @@ public class LexicalAnalyser {
             }
 
             // If no pattern matches, throw an error
-            throw new CustomException("Cannot tokenize the Character: " + currentChar + " at Index: " + currentIndex);
+            throw new InterpreterException("Cannot tokenize the Character: " + currentChar + " at Index: " + currentIndex);
         }
     }
 }

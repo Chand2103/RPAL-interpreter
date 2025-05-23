@@ -15,17 +15,30 @@ public class AST {
         return this.root;
     }
 
+    /**
+
+        Standardizes the AST by invoking standardize on the root node,
+        only if the tree is not already standardized.
+
+     */
     public void standardize() {
         if (!this.root.isStandardized) {
             this.root.standardize();
         }
     }
 
-    private void preOrderTraverse(Node node,int i) {
-        for (int n = 0; n < i; n++) {System.out.print(".");}
+    private void preOrderTraverse(Node node, int i) {
+        // Print dots proportional to the depth (i) to visually represent the tree structure
+        for (int n = 0; n < i; n++) {
+            System.out.print(".");
+        }
+        // Print the data contained in the current node
         System.out.println(node.getData());
-        node.children.forEach((child) -> preOrderTraverse(child, i+1));
+
+        // Recursively call preOrderTraverse on each child, increasing indentation level by 1
+        node.children.forEach((child) -> preOrderTraverse(child, i + 1));
     }
+
 
     public void printAst() {
         this.preOrderTraverse(this.getRoot(), 0);

@@ -3,11 +3,11 @@ package CSE;
 import java.util.ArrayList;
 import java.util.List;
 
-import Exception.CustomException;
+import Exceptions.InterpreterException;
 import Parser.Node;
 import Parser.Parser;
 import Standardizer.AST;
-import Standardizer.ASTFactory;
+import Standardizer.ASTConstructor;
 import Lexer.LexicalAnalyser;
 import Lexer.Token;
 
@@ -56,9 +56,9 @@ public class Interpreter {
                 }
             }
 
-            // Create ASTFactory instance to generate abstract syntax tree object
-            ASTFactory astf = new ASTFactory();
-            AST ast = astf.getAbstractSyntaxTree(stringAST);
+            // Create ASTConstructor instance to generate abstract syntax tree object
+            ASTConstructor astconstructor = new ASTConstructor();
+            AST ast = astconstructor.getAbstractSyntaxTree(stringAST);
 
             // Standardize the AST for uniform structure
             ast.standardize();
@@ -75,7 +75,7 @@ public class Interpreter {
             // Return the answer/result of the evaluation from CSE machine
             return csemachine.getAnswer();
 
-        } catch (CustomException e) {
+        } catch (InterpreterException e) {
             // Print custom exception message if any error occurs
             System.out.println(e.getMessage());
         }
