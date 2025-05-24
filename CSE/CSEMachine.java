@@ -1,11 +1,11 @@
 /**
- * Control Stack Environment (CSE) Machine Implementation
- * 
- * This code implements a CSE machine which is an abstract machine
- * for evaluating functional programming languages. This processes expressions by maintaining three
- * components a control stack (expressions to evaluate), a value stack (computed results), and
- * environment chain (variable bindings), executing transition rules until the final result is computed.
- */
+  Control Stack Environment (CSE) Machine Implementation
+  
+  This code implements a CSE machine which is an abstract machine
+  for evaluating functional programming languages. This processes expressions by maintaining three
+  components a control stack (expressions to evaluate), a value stack (computed results), and
+  environment chain (variable bindings), executing transition rules until the final result is computed.
+ /
 
 package CSE;
 
