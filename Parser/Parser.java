@@ -10,9 +10,9 @@ import java.util.Collections;
 
 /**
 
-    Parser for constructing an Abstract Syntax Tree (AST) from a list of tokens.
-    Supports recursive descent parsing based on grammar rules .
-    Outputs a node-based AST and an indented string representation.
+ Parser for constructing an Abstract Syntax Tree (AST) from a list of tokens.
+ Supports recursive descent parsing based on grammar rules .
+ Outputs a node-based AST and an indented string representation.
 
  **/
 
@@ -46,11 +46,11 @@ public class Parser {
 
     /**
 
-       Converts the internal Abstract Syntax Tree (AST) into a serialized list of strings.
-       Each node is represented as a string with indentation reflecting the tree structure.
-       Uses a stack-based approach to traverse the AST nodes and formats them into a human-readable form.
-       Finally, reverses the resulting list to present the AST in the correct order.
-       @return A list of strings representing the serialized AST.
+     Converts the internal Abstract Syntax Tree (AST) into a serialized list of strings.
+     Each node is represented as a string with indentation reflecting the tree structure.
+     Uses a stack-based approach to traverse the AST nodes and formats them into a human-readable form.
+     Finally, reverses the resulting list to present the AST in the correct order.
+     @return A list of strings representing the serialized AST.
 
      **/
 
@@ -98,9 +98,9 @@ public class Parser {
 
     /**
 
-       Formats a single AST node into a string representation and adds it to the output list.
-       @param dots Indentation string representing the current node’s depth in the AST
-       @param node The AST node to format and add
+     Formats a single AST node into a string representation and adds it to the output list.
+     @param dots Indentation string representing the current node's depth in the AST
+     @param node The AST node to format and add
 
      **/
 
@@ -445,7 +445,7 @@ public class Parser {
 
      ==================== Rators And Rands ====================
      R → R Rn
-     | Rn
+       | Rn
 
      **/
 
@@ -702,6 +702,10 @@ public class Parser {
             tokens.remove(0);
             n++;
         } while (tokens.get(0).value.equals(","));
-        AST.add(new Node(NodeType.comma, ",", n));
+
+        // Only create comma node if there are multiple identifiers
+        if (n > 1) {
+            AST.add(new Node(NodeType.comma, ",", n));
+        }
     }
 }
