@@ -40,13 +40,13 @@ Run the interpreter with the following commands depending on the desired output:
   java myrpal <filename>
   ```
 
-- **To get Standardized Tree (ST):**
+- **To get only the Standardized Tree (ST):**
 
   ```bash
   java myrpal -st <filename>
   ```
 
-- **To get Abstract Syntax Tree (AST):**
+- **To get only the Abstract Syntax Tree (AST):**
 
   ```bash
   java myrpal -ast <filename>
@@ -54,8 +54,8 @@ Run the interpreter with the following commands depending on the desired output:
 
 ### Explanation
 
-- `-st`: Displays the Standardized Tree
-- `-ast`: Displays the Abstract Syntax Tree
+- `-st`: Displays only the Standardized Tree
+- `-ast`: Displays only the Abstract Syntax Tree
 
 ## Example
 
