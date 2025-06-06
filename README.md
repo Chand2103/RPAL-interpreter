@@ -57,6 +57,7 @@ Run the interpreter with the following commands depending on the desired output:
 - `-st`: Displays only the Standardized Tree
 - `-ast`: Displays only the Abstract Syntax Tree
 - **Combined switches** (`-ast -st` or `-st -ast`): Displays **both trees**, with the **Abstract Syntax Tree (AST)** shown **first**, followed by the **Standardized Tree (ST)** — **regardless of the order** in which the switches are passed.
+- **Default behavior**: If no switches are provided (i.e., just `java myrpal` is run), it defaults to using the test file `"t1.txt"` and displays **both AST and ST**.
 
 ## Example
 
